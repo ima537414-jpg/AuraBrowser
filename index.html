@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aura Browser · чистая скорость</title>
+  <!-- Шрифт Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (иконки) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: "Inter", sans-serif;
+      background: #0a0c15;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ededf5;
+      line-height: 1.5;
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+    /* Анимированный фон */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, #1b1e3c, #0b0d1a 40%, #020617);
+      animation: shiftBg 28s ease-in-out infinite alternate;
+      z-index: -2;
+    }
+    @keyframes shiftBg {
+      0% { transform: translate(0%, 0%) scale(1); }
+      100% { transform: translate(-5%, -5%) scale(1.1); }
+    }
+    /* Шум */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJmIj48ZmVUdXJidWxlbmNlIHR5cGU9ImZyYWN0YWxOb2lzZSIgYmFzZUZyZXF1ZW5jeT0iLjc0IiBudW1PY3RhdmVzPSIzIiAvPjwvZmlsdGVyPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbHRlcj0idXJsKCNmKSIgb3BhY2l0eT0iMC4wMjUiIC8+PC9zdmc+');
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: -1;
+      animation: noiseMove 12s infinite linear;
+    }
+    @keyframes noiseMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(-5%, -5%); }
+    }
+    /* Основной контейнер */
+    .glass-card {
+      max-width: 1280px;
+      width: 100%;
+      background: rgba(18, 22, 35, 0.65);
+      backdrop-filter: blur(15px) saturate(160%);
+      -webkit-backdrop-filter: blur(15px) saturate(160%);
+      border-radius: 3.5rem 2rem 3.5rem 2rem;
+      border: 1px solid rgba(130, 140, 210, 0.15);
+      box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(210, 190, 255, 0.1) inset;
+      padding: 2.8rem 2.5rem;
+      transition: transform 0.4s ease, box-shadow 0.4s;
+      animation: floatIn 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .glass-card:hover {
+      box-shadow: 0 40px 80px -20px #1f1b4e, 0 0 0 1px rgba(180, 160, 255, 0.2) inset;
+    }
+    @keyframes floatIn {
+      0% { opacity: 0; transform: translateY(40px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    /* Шапка */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.2rem;
+      margin-bottom: 3.5rem;
+      animation: slideDown 0.8s ease;
+    }
+    @keyframes slideDown {
+      0% { opacity: 0; transform: translateY(-25px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+    .logo-icon {
+      font-size: 2.8rem;
+      color: #b1b9ff;
+      background: rgba(45, 40, 80, 0.5);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem 0.8rem 2rem 0.8rem;
+      border: 1px solid rgba(210, 190, 255, 0.2);
+      transition: transform 0.3s;
+    }
+    .logo-icon:hover { transform: rotate(8deg) scale(1.05); }
+    .logo-text {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #f0efff, #c9c1ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .badge {
+      background: rgba(55, 50, 100, 0.5);
+      padding: 0.5rem 1.4rem;
+      border-radius: 3rem;
+      font-weight: 500;
+      font-size: 0.95rem;
+      border: 1px solid #43407f;
+      color: #deddff;
+      backdrop-filter: blur(5px);
+      animation: softPulse 3s infinite;
+    }
+    @keyframes softPulse {
+      0% { border-color: #43407f; }
+      50% { border-color: #7a72c0; }
+      100% { border-color: #43407f; }
+    }
+    /* Hero */
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 3rem;
+      margin-bottom: 4rem;
+      align-items: center;
+    }
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+    .hero-title {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(145deg, #ffffff, #dbd3ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .highlight {
+      background: linear-gradient(145deg, #ffdcaa, #ffb0aa);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 700;
+    }
+    .hero-description {
+      font-size: 1.2rem;
+      color: #c2cbff;
+      max-width: 550px;
+      margin-bottom: 2.5rem;
+      border-left: 3px solid #6b5fc0;
+      padding-left: 1.5rem;
+      background: rgba(35, 30, 60, 0.3);
+      border-radius: 0 1rem 1rem 0;
+      transition: border-color 0.3s;
+    }
+    .hero-description:hover { border-left-color: #ad9dff; }
+    /* Кнопка Telegram */
+    .tg-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      background: rgba(75, 65, 140, 0.9);
+      padding: 1rem 2.4rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      font-size: 1.3rem;
+      color: white;
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 12px 25px -12px #0d0b28;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+    }
+    .tg-button i {
+      font-size: 1.8rem;
+      color: #bbe0ff;
+      transition: transform 0.2s;
+    }
+    .tg-button:hover {
+      background: #5f4fc7;
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-3px);
+      box-shadow: 0 25px 35px -14px #2a2366;
+    }
+    .tg-button:hover i { transform: translateX(4px) scale(1.1); }
+    .tg-button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      transition: width 0.4s, height 0.4s;
+      transform: translate(-50%, -50%);
+    }
+    .tg-button:active::after { width: 250px; height: 250px; }
+    /* Визуализация браузера (чёрный стиль) */
+    .browser-viz {
+      background: #0e0e17;
+      border-radius: 2rem;
+      padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+      border: 1px solid #2b2748;
+      box-shadow: 0 30px 40px -30px #000000, 0 0 0 1px #2f2b4a inset;
+      transition: transform 0.3s;
+      color: #f0f0ff;
+    }
+    .browser-viz:hover { transform: scale(1.01); }
+    .aura-logo {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2rem;
+      text-align: center;
+      color: #dbd2ff;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
+      background: linear-gradient(145deg, #ffffff, #cbbdff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .search-bar {
+      background: #1c1a2a;
+      border-radius: 3rem;
+      padding: 0.8rem 1.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid #3b3570;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #bcb6ff;
+      font-size: 0.95rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.6);
+    }
+    .search-bar i { color: #7d74b0; font-size: 1rem; }
+    .search-bar span { flex: 1; opacity: 0.8; }
+    .service-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.2rem 1rem;
+      margin-bottom: 2rem;
+    }
+    .service-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(30, 28, 50, 0.6);
+      padding: 0.7rem 0.2rem;
+      border-radius: 1.2rem;
+      border: 1px solid #35305a;
+      transition: all 0.2s;
+      backdrop-filter: blur(4px);
+    }
+    .service-item:hover {
+      background: #2a2650;
+      border-color: #8b7de0;
+      transform: translateY(-3px);
+    }
+    .service-item i { font-size: 1.6rem; color: #dbd1ff; }
+    .service-item span {
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      opacity: 0.9;
+      letter-spacing: 0.03em;
+    }
+    /* Нижняя строка RAM */
+    .ram-stats {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #131125;
+      padding: 0.6rem 1.2rem;
+      border-radius: 2rem;
+      border: 1px solid #4c4288;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: #b0acff;
+      margin-top: 0.5rem;
+    }
+    .ram-stats i { color: #6be07c; margin-right: 0.4rem; }
+    /* Сетка преимуществ (с явной иконкой приватности) */
+    .features {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin: 4rem 0 2rem;
+      animation: fadeUp 1s ease 0.2s both;
+    }
+    @media (max-width: 700px) {
+      .features { grid-template-columns: repeat(2, 1fr); }
+    }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .feature-item {
+      background: rgba(18, 22, 38, 0.6);
+      border-radius: 1.8rem 1rem 1.8rem 1rem;
+      padding: 1.5rem 1.2rem;
+      backdrop-filter: blur(6px);
+      border: 1px solid #2b2850;
+      transition: all 0.25s ease;
+      animation: featurePop 0.6s ease backwards;
+    }
+    .feature-item:nth-child(1) { animation-delay: 0.1s; }
+    .feature-item:nth-child(2) { animation-delay: 0.2s; }
+    .feature-item:nth-child(3) { animation-delay: 0.3s; }
+    .feature-item:nth-child(4) { animation-delay: 0.4s; }
+    @keyframes featurePop {
+      0% { opacity: 0; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .feature-item:hover {
+      border-color: #7a6dd0;
+      background: rgba(35, 32, 60, 0.8);
+      transform: translateY(-6px) scale(1.02);
+    }
+    .feature-icon {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #bbaaff;
+      transition: transform 0.2s;
+    }
+    .feature-item:hover .feature-icon { transform: translateY(-5px); }
+    .feature-item h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+    .feature-item p {
+      color: #b7c4ff;
+      font-size: 0.9rem;
+    }
+    /* Footer (без подписчиков) */
+    .footer-download {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px dashed rgba(140, 130, 230, 0.25);
+      animation: slideUp 0.8s 0.3s both;
+    }
+    @keyframes slideUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    .stats {
+      display: flex;
+      gap: 2rem;
+    }
+    .stat-item {
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #d6d2ff;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: #96a0d9;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .download-link {
+      background: rgba(30, 28, 50, 0.7);
+      padding: 0.7rem 2rem;
+      border-radius: 4rem;
+      border: 1px solid #4f4790;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      text-decoration: none;
+      color: #f0ecff;
+      font-weight: 500;
+      backdrop-filter: blur(8px);
+      transition: 0.3s;
+    }
+    .download-link i {
+      font-size: 1.8rem;
+      color: #8f9eff;
+      animation: wobble 4s infinite;
+    }
+    @keyframes wobble {
+      0%,100%{ transform: rotate(0deg); }
+      25%{ transform: rotate(5deg); }
+      75%{ transform: rotate(-5deg); }
+    }
+    .download-link:hover {
+      background: #3c3575;
+      border-color: #a697ff;
+      gap: 1.3rem;
+    }
+    /* Мини-плашка Telegram (без подписчиков) */
+    .telegram-mini {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(30, 28, 55, 0.6);
+      border-radius: 3rem;
+      padding: 0.4rem 1.5rem 0.4rem 1rem;
+      border: 1px solid #4e4390;
+      transition: 0.2s;
+    }
+    .telegram-mini:hover {
+      background: #353062;
+      border-color: #9585f0;
+    }
+    .telegram-mini i {
+      font-size: 2rem;
+      color: #6f9bf0;
+      animation: telegramPop 3s infinite;
+    }
+    @keyframes telegramPop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); }
+    }
+    /* Адаптив */
+    @media (max-width: 500px) {
+      .glass-card { padding: 2rem 1.5rem; }
+      .footer-download { flex-direction: column; align-items: start; }
+      .service-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card">
+    <div class="header">
+      <div class="logo-area">
+        <span class="logo-icon"><i class="fas fa-compass"></i></span>
+        <span class="logo-text">Aura Browser</span>
+      </div>
+      <div class="badge">
+        <i class="fas fa-bolt" style="margin-right: 0.4rem;"></i> release 1.0.0
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <h1 class="hero-title">
+          скользи по сети <br> с <span class="highlight">чистой</span> скоростью
+        </h1>
+        <p class="hero-description">
+          <i class="fas fa-sparkles" style="margin-right: 0.6rem; color: #b3abff;"></i>
+          Aura — браузер, который чувствует ритм. Никакого шума, только эстетика и передовые технологии.
+        </p>
+        <a href="https://t.me/aurabrowse" target="_blank" class="tg-button">
+          <i class="fab fa-telegram-plane"></i> 
+          Перейти в Telegram
+          <i class="fas fa-arrow-right" style="font-size: 1.1rem;"></i>
+        </a>
+        <div style="margin-top: 1.8rem; display: flex; gap: 0.6rem; align-items: center;">
+          <div style="display: flex; gap: 0.2rem;">
+            <i class="fas fa-star" style="color: #b4a6ff;"></i><i class="fas fa-star" style="color: #b4a6ff;"></i><i class="fas fa-star" style="color: #b4a6ff;"></i><i class="fas fa-star" style="color: #b4a6ff;"></i><i class="fas fa-star-half-alt" style="color: #b4a6ff;"></i>
+          </div>
+          <span style="color: #b1beff;">первые отзывы в канале</span>
+        </div>
+      </div>
+
+      <!-- Визуализация браузера (RAM 9.5 MB) -->
+      <div class="browser-viz">
+        <div class="aura-logo">AURA</div>
+        <div class="search-bar">
+          <i class="fas fa-search"></i>
+          <span>Искать в интернете или ввести адрес</span>
+          <i class="fas fa-microphone" style="opacity: 0.6;"></i>
+        </div>
+        <div class="service-grid">
+          <div class="service-item"><i class="fab fa-vk"></i><span>VK</span></div>
+          <div class="service-item"><i class="fab fa-youtube"></i><span>YouTube</span></div>
+          <div class="service-item"><i class="fab fa-telegram"></i><span>Telegram</span></div>
+          <div class="service-item"><i class="fab fa-github"></i><span>GitHub</span></div>
+          <div class="service-item"><i class="fab fa-google"></i><span>Google</span></div>
+          <div class="service-item"><i class="fas fa-envelope"></i><span>Gmail</span></div>
+          <div class="service-item"><i class="fas fa-robot"></i><span>ChatGPT</span></div>
+          <div class="service-item"><i class="fas fa-music"></i><span>Яндекс</span></div>
+        </div>
+        <div class="ram-stats">
+          <span><i class="fas fa-microchip"></i> RAM 9.5 MB</span>
+          <span>| 100%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Преимущества: иконка приватности (щит) исправлена на fa-shield-alt -->
+    <div class="features">
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-gauge-high"></i></div>
+        <h3>Молниеносный</h3>
+        <p>AuraRender сжимает трафик, страницы летят</p>
+      </div>
+      <div class="feature-item">
+        <!-- Иконка приватности – теперь точно видна (fa-shield-alt) -->
+        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+        <h3>Приватность</h3>
+        <p>блокировщик трекеров и рекламы</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-paint-roller"></i></div>
+        <h3>Динамические темы</h3>
+        <p>интерфейс подстраивается под окружение</p>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fas fa-microchip"></i></div>
+        <h3>Энергоэффективный</h3>
+        <p>до 30% экономии батареи</p>
+      </div>
+    </div>
+
+    <!-- Footer: без подписчиков, только возможности и версия -->
+    <div class="footer-download">
+      <div class="stats">
+        <!-- Удалён элемент с подписчиками -->
+        <div class="stat-item">
+          <div class="stat-number">∞</div>
+          <div class="stat-label">возможностей</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-number">1.0.0</div>
+          <div class="stat-label">release</div>
+        </div>
+      </div>
+      <a href="https://t.me/aurabrowse" target="_blank" class="download-link">
+        <i class="fab fa-telegram"></i>
+        <span>t.me/aurabrowse</span>
+        <i class="fas fa-arrow-up-right-from-square" style="font-size: 1rem;"></i>
+      </a>
+    </div>
+
+    <!-- Мини-плашка Telegram (без числа подписчиков) -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 1.5rem;">
+      <div class="telegram-mini">
+        <i class="fab fa-telegram"></i>
+        <div>
+          <span style="font-weight: 500;">Aura Software</span><br>
+          <small style="color: #b0bbf0;">обновление</small>
+        </div>
+        <a href="https://t.me/aurabrowse" style="color: white; margin-left: 0.8rem;">↗</a>
+      </div>
+    </div>
+
+    <!-- Сноска полностью убрана -->
+  </div>
+</body>
+</html>
